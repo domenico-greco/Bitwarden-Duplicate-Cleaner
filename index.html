@@ -115,8 +115,6 @@ Created by <a href="https://domenicogreco.com" target="_blank">Domenico Greco</a
         var input = document.getElementById('jsonInput').value;
         try {
             let all = JSON.parse(input);
-
-            // Copia tutti i campi esistenti, inclusi folders e altri campi aggiuntivi
             let newAll = { ...all, "items": [] };
 
             all.items.forEach(row => {
@@ -131,7 +129,7 @@ Created by <a href="https://domenicogreco.com" target="_blank">Domenico Greco</a
 
             processedJSON = JSON.stringify(newAll, null, 4);
             document.getElementById('jsonOutput').value = processedJSON;
-            document.getElementById('downloadBtn').disabled = false;  // Abilita il pulsante di download
+            document.getElementById('downloadBtn').disabled = false; 
 
         } catch (e) {
             alert("Invalid JSON data");
@@ -149,7 +147,7 @@ Created by <a href="https://domenicogreco.com" target="_blank">Domenico Greco</a
         a.download = 'bitwarden_cleaned_gr3std.json';
         a.click();
 
-        URL.revokeObjectURL(url);  // Pulisci l'URL oggetto
+        URL.revokeObjectURL(url);
     }
     
     function clearAll(){
