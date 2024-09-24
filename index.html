@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitwarden Duplicate Cleaner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 10px;
+            font-family: monospace;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:disabled {
+            background-color: grey;
+        }
+        .output {
+            margin-top: 20px;
+        }
+        h2, h1, p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Bitwarden Duplicate Cleaner</h1>
+    <p>Paste your Bitwarden JSON data below. Duplicates items whit the same website name and username will be removed.</p>
+    <p>Instructions:<br></p>
+    <ul>
+        <li>Export All your passwords from bitwarden in json (<a href="https://bitwarden.com/help/export-your-data/" target="_blank">help</a>) (<a href="https://vault.bitwarden.com/#/tools/export" target="_blank">direct url</a>).</li>
+        <li>Open the downloaded file, copy all the content, paste here and click <b>Process Json</b>.</li>
+        <li>Download the result by clicking oh the download button.</li>
+        <li>Clear your Bitwarden Vault (<a href="https://vault.bitwarden.com/#/settings/account" target="_blank">direct url</a>). </li>
+        <li>Import the new passwords (<a href="https://bitwarden.com/help/import-data/" target="_blank">help</a>) (<a href="https://vault.bitwarden.com/#/tools/import" target="_blank">direct url</a>) choosing file format <b>Bitwarden (json)</b>.</li>
+    </ul>
+    <br>
+    <b>Paste here your passwords</b><br><br>
+    <textarea id="jsonInput" placeholder='PASTE YOUR BITWARDEN JSON HERE...
+Example:
+
+{
+    "encrypted": false,
+    "folders": [],
+    "items": [
+        {
+            "passwordHistory": null,
+            "revisionDate": "2024-09-23T22:01:36.262Z",
+            "creationDate": "2024-09-23T22:01:36.262Z",
+            "deletedDate": null,
+            "id": "example-id-1",
+            "organizationId": null,
+            "folderId": null,
+            "type": 1,
+            "reprompt": 0,
+            "name": "www.example.com",
+            "login": {
+                "username": "user1",
+                "password": "password1"
+            }
+        },
+        {
+            "passwordHistory": null,
+            "revisionDate": "2024-09-24T15:58:54.337Z",
+            "creationDate": "2024-09-24T15:58:54.337Z",
+            "deletedDate": null,
+            "id": "example-id-2",
+            "organizationId": null,
+            "folderId": null,
+            "type": 1,
+            "reprompt": 0,
+            "name": "www.example.com",
+            "login": {
+                "username": "user1",
+                "password": "password2"
+            }
+        }
+    ]
+}
+'></textarea>
+    <button onclick="processJSON()">Process JSON</button>
+    
+    <div class="output">
+        <h2>Processed JSON:</h2>
+        <textarea id="jsonOutput" readonly></textarea>
+    </div>
+    <button id="downloadBtn" onclick="downloadJSON()" disabled>Download Processed JSON</button>
+    <button onclick="clearAll();">Clear All</button>
+</div>
+
+<hr style="margin-top:8vh;">
+Created by <a href="https://domenicogreco.com" target="_blank">Domenico Greco</a>.
+
+<script>
+    let processedJSON = null;
+
+    function processJSON() {
+        var input = document.getElementById('jsonInput').value;
+        try {
+            let all = JSON.parse(input);
+
+            // Copia tutti i campi esistenti, inclusi folders e altri campi aggiuntivi
+            let newAll = { ...all, "items": [] };
+
+            all.items.forEach(row => {
+                let alreadyExists = newAll.items.some(newRow => 
+                    newRow.name === row.name && newRow.login.username === row.login.username
+                );
+
+                if (!alreadyExists) {
+                    newAll.items.push(row);
+                }
+            });
+
+            processedJSON = JSON.stringify(newAll, null, 4);
+            document.getElementById('jsonOutput').value = processedJSON;
+            document.getElementById('downloadBtn').disabled = false;  // Abilita il pulsante di download
+
+        } catch (e) {
+            alert("Invalid JSON data");
+        }
+    }
+
+    function downloadJSON() {
+        if (!processedJSON) return;
+
+        const blob = new Blob([processedJSON], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'bitwarden_cleaned_gr3std.json';
+        a.click();
+
+        URL.revokeObjectURL(url);  // Pulisci l'URL oggetto
+    }
+    
+    function clearAll(){
+        processedJSON = null;
+        document.getElementById('jsonInput').value = "";
+        document.getElementById('jsonOutput').value = "";
+        document.getElementById('downloadBtn').disabled = true;
+    }
+</script>
+
+</body>
+</html>
