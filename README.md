@@ -1,7 +1,7 @@
 # Bitwarden Duplicate Cleaner
 
 Easily and effectively eliminate all duplicate login credentials.\
-You can either download the **index.html** file for local use or upload it to your server.\
+You can either download the **index.html** file for local use (open with your browser) or upload it to your server.\
 Alternatively, you can access it via the [DEMO](https://gr3studios.com/std/bitwardenCleaner/).
 
 ## INSTRUCTIONS
