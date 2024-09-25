@@ -11,3 +11,6 @@ Alternatively, you can access it via the [DEMO](https://gr3studios.com/std/bitwa
 3. Download the results by clicking the download button.
 4. **Clear your Bitwarden Vault** using this [direct link](https://vault.bitwarden.com/#/settings/account).
 5. **Import the new passwords** by following this [help guide](https://bitwarden.com/help/import-data/) and selecting the file format **Bitwarden (JSON)** from the options.
+
+
+Created by [Domenico Greco](https://domenicogreco.com/?s=gh)
